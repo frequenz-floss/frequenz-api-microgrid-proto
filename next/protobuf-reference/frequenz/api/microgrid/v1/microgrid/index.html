@@ -946,6 +946,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#componentboundsvalidityduration" class="md-nav__link">
+    <span class="md-ellipsis">
+      ComponentBoundsValidityDuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#microgrid" class="md-nav__link">
     <span class="md-ellipsis">
       Microgrid
@@ -1610,6 +1619,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#componentboundsvalidityduration" class="md-nav__link">
+    <span class="md-ellipsis">
+      ComponentBoundsValidityDuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#microgrid" class="md-nav__link">
     <span class="md-ellipsis">
       Microgrid
@@ -1683,6 +1701,9 @@
 <p><a href="#frequenz-api-microgrid-v1-StopComponentRequest">StopComponentRequest</a></p>
 </li>
 <li>
+<p><a href="#frequenz-api-microgrid-v1-ComponentBoundsValidityDuration">ComponentBoundsValidityDuration</a></p>
+</li>
+<li>
 <p><a href="#frequenz-api-microgrid-v1-Microgrid">Microgrid</a></p>
 </li>
 </ul>
@@ -1746,6 +1767,12 @@
 <td><a href="#frequenz-api-common-v1-metrics-Bounds">frequenz.api.common.v1.metrics.Bounds</a></td>
 <td>repeated</td>
 <td>A list of bounds for the target metric. While incorporating these bounds, the API will ensure that overlapping pairs of bounds are merged into a single pair of bounds, and non-overlapping ones are kept separated.</td>
+</tr>
+<tr>
+<td>validity_duration</td>
+<td><a href="#frequenz-api-microgrid-v1-ComponentBoundsValidityDuration">ComponentBoundsValidityDuration</a></td>
+<td></td>
+<td>The duration for which the given bounds will stay in effect. If this field is not provided, then the bounds will be removed after a default duration of 5 seconds.</td>
 </tr>
 </tbody>
 </table>
@@ -2246,6 +2273,45 @@ this message.</p>
 </tr>
 </tbody>
 </table>
+<p><a name="frequenz-api-microgrid-v1-ComponentBoundsValidityDuration"></a></p>
+<h3 id="componentboundsvalidityduration">ComponentBoundsValidityDuration<a class="headerlink" href="#componentboundsvalidityduration" title="Permanent link">¤</a></h3>
+<p>The duration for which a given list of bounds will stay in effect.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>COMPONENT_BOUNDS_VALIDITY_DURATION_UNSPECIFIED</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>COMPONENT_BOUNDS_VALIDITY_DURATION_5_SECONDS</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>COMPONENT_BOUNDS_VALIDITY_DURATION_1_MINUTE</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>COMPONENT_BOUNDS_VALIDITY_DURATION_5_MINUTES</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>COMPONENT_BOUNDS_VALIDITY_DURATION_15_MINUTES</td>
+<td>4</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <p><a name="frequenz-api-microgrid-v1-Microgrid"></a></p>
 <h3 id="microgrid">Microgrid<a class="headerlink" href="#microgrid" title="Permanent link">¤</a></h3>
 <p>The Frequenz Microgrid API</p>
@@ -2285,7 +2351,8 @@ this message.</p>
 <p>The request may be filtered by <code>start</code>/<code>end</code> component(s) of individual connections. If provided, the <code>start</code> and <code>end</code> filters have an <code>AND</code> relationship between each other, meaning that they are applied serially, but an <code>OR</code> relationship with other elements in the same list. For example, if <code>start</code> = <code>[1, 2, 3]</code>, and <code>end</code> = <code>[4, 5, 6]</code>, then the result should have all the connections where * each <code>start</code> component ID is either <code>1</code>, <code>2</code>, OR <code>3</code>, AND * each <code>end</code> component ID is either <code>4</code>, <code>5</code>, OR <code>6</code>. |
 | ReceiveComponentDataStream | <a href="#frequenz-api-microgrid-v1-ReceiveComponentDataStreamRequest">ReceiveComponentDataStreamRequest</a> | <a href="#frequenz-api-microgrid-v1-ReceiveComponentDataStreamResponse">ReceiveComponentDataStreamResponse</a> stream | Returns a stream containing data from a component with a given ID. |
 | ReceiveSensorDataStream | <a href="#frequenz-api-microgrid-v1-ReceiveSensorDataStreamRequest">ReceiveSensorDataStreamRequest</a> | <a href="#frequenz-api-microgrid-v1-ReceiveSensorDataStreamResponse">ReceiveSensorDataStreamResponse</a> stream | Returns a stream containing data from a sensor with a given ID. |
-| AddComponentBounds | <a href="#frequenz-api-microgrid-v1-AddComponentBoundsRequest">AddComponentBoundsRequest</a> | <a href="#frequenz-api-microgrid-v1-AddComponentBoundsResponse">AddComponentBoundsResponse</a> | Adds inclusion bounds for a given metric of a given component. Returns the time at which the bounds will expire (as a timestamp (UTC))</p>
+| AddComponentBounds | <a href="#frequenz-api-microgrid-v1-AddComponentBoundsRequest">AddComponentBoundsRequest</a> | <a href="#frequenz-api-microgrid-v1-AddComponentBoundsResponse">AddComponentBoundsResponse</a> | Adds inclusion bounds for a given metric of a given component. Returns the time at which the bounds will expire (as a timestamp (UTC)).</p>
+<p>The request parameters allows users to select a duration until which the bounds will stay in effect. If no duration is provided, then the bounds will be removed after a default duration of 5 seconds.</p>
 <p>Inclusion bounds give the range that the system will try to keep the metric within. If the metric goes outside of these bounds, the system will try to bring it back within the bounds. If the bounds for a metric are [[<code>lower_1</code>, <code>upper_1</code>], [<code>lower_2</code>, <code>upper_2</code>]], then this metric&#39;s <code>value</code> needs to comply with the constraints <code>lower_1 &amp;lt;= value &amp;lt;= upper_1</code> OR <code>lower_2 &amp;lt;= value &amp;lt;= upper_2</code>.</p>
 <p>If multiple inclusion bounds have been provided for a metric, then the overlapping bounds are merged into a single bound, and non-overlapping bounds are kept separate. E.g. if the bounds are [[0, 10], [5, 15], [20, 30]], then the resulting bounds will be [[0, 15], [20, 30]].</p>
 <p>The following diagram illustrates how bounds are applied: <code>lower_1 upper_1 &amp;lt;----|========|--------|========|--------&amp;gt; lower_2 upper_2</code> The bounds in this example are <code>[[lower_1, upper_1], [lower_2, upper_2]]</code>. ---- values here are considered out of range. ==== values here are considered within range.</p>
