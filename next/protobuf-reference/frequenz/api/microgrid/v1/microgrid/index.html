@@ -2160,6 +2160,12 @@ this message.</p>
 <td></td>
 <td>The output active power level, in watts. -ve values are for discharging, and &#43;ve values are for charging.</td>
 </tr>
+<tr>
+<td>request_lifetime</td>
+<td><a href="#uint64">uint64</a></td>
+<td>optional</td>
+<td>The duration, in seconds, until which the request will stay in effect. This duration has to be between 10 seconds and 15 minutes (including both limits), otherwise the request will be rejected. If not provided, it defaults to 60s.</td>
+</tr>
 </tbody>
 </table>
 <p><a name="frequenz-api-microgrid-v1-SetComponentPowerActiveResponse"></a></p>
@@ -2210,7 +2216,8 @@ this message.</p>
 </tr>
 </tbody>
 </table>
-<p>The standard of polarity is as per the IEEE 1459-2010 standard definitions: - positive reactive is inductive (current is lagging the voltage) - negative reactive is capacitive (current is leading the voltage) |</p>
+<p>The standard of polarity is as per the IEEE 1459-2010 standard definitions: - positive reactive is inductive (current is lagging the voltage) - negative reactive is capacitive (current is leading the voltage) |
+| request_lifetime | <a href="#uint64">uint64</a> | optional | The duration, in seconds, until which the request will stay in effect. This duration has to be between 10 seconds and 15 minutes (including both limits), otherwise the request will be rejected. If not provided, it defaults to 60s. |</p>
 <p><a name="frequenz-api-microgrid-v1-SetComponentPowerReactiveResponse"></a></p>
 <h3 id="setcomponentpowerreactiveresponse">SetComponentPowerReactiveResponse<a class="headerlink" href="#setcomponentpowerreactiveresponse" title="Permanent link">¤</a></h3>
 <p>Response message for the RPC <code>SetComponentPowerReactive</code>.</p>
