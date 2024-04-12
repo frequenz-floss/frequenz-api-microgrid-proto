@@ -10,6 +10,7 @@ syntax = "proto3";
 
 package frequenz.api.microgrid;
 
+import "frequenz/api/microgrid/air_conditioner.proto";
 import "frequenz/api/microgrid/battery.proto";
 import "frequenz/api/microgrid/ev_charger.proto";
 import "frequenz/api/microgrid/grid.proto";
@@ -466,6 +467,7 @@ message ComponentData {
     battery.Battery battery = 5;
     ev_charger.EvCharger ev_charger = 6;
     sensor.Sensor sensor = 7;
+    air_conditioner.AirConditioner air_conditioner = 8;
   }
 }
 

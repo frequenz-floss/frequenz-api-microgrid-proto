@@ -1,0 +1,269 @@
+// Contains definitions specific to air conditioners.
+//
+// Copyright:
+// Copyright 2024 Frequenz Energy-as-a-Service GmbH
+//
+// License:
+// MIT
+
+syntax = "proto3";
+
+package frequenz.api.microgrid.air_conditioner;
+
+import "frequenz/api/microgrid/common.proto";
+
+import "frequenz/api/common/components.proto";
+import "frequenz/api/common/metrics.proto";
+import "frequenz/api/common/metrics/electrical.proto";
+
+// Enumerated operational states of an air conditioner component.
+enum ComponentState {
+  // The state has not been specified or is not available due to missing data.
+  COMPONENT_STATE_UNSPECIFIED = 0;
+
+  // The state is available but cannot be interpreted or parsed due to an
+  // incorrect data format.
+  COMPONENT_STATE_UNKNOWN = 1;
+
+  // The air conditioner is powered off.
+  COMPONENT_STATE_OFF = 2;
+
+  // The air conditioner has encountered a fault.
+  COMPONENT_STATE_ERROR = 3;
+
+  // The air conditioner is powered on but is disabled.
+  COMPONENT_STATE_DISABLED = 4;
+
+  // The air conditioner is operating in auto mode, automatically adjusting its
+  // operational mode based on environmental conditions and set parameters.
+  COMPONENT_STATE_AUTO = 5;
+
+  // The air conditioner is actively cooling the environment to lower the
+  // temperature to the desired setpoint.
+  COMPONENT_STATE_COOLING = 6;
+
+  // The air conditioner is actively heating the environment to raise the
+  // temperature to the desired setpoint.
+  COMPONENT_STATE_HEATING = 7;
+
+  // The air conditioner is actively working to reduce the humidity level in
+  // the environment without significantly changing the temperature.
+  COMPONENT_STATE_DRYING = 8;
+
+  // The air conditioner is operating in fan mode, circulating air without
+  // actively altering the temperature or humidity levels.
+  COMPONENT_STATE_FAN = 9;
+}
+
+// Enumerated error codes.
+enum ErrorCode {
+  // Default value when the error code is not specified.
+  ERROR_CODE_UNSPECIFIED = 0;
+
+  // The temperature is too high.
+  ERROR_CODE_TEMPERATURE_HIGH = 1;
+
+  // The temperature is too low.
+  ERROR_CODE_TEMPERATURE_LOW = 2;
+
+  // The temperature is out of the acceptable range.
+  // This could be either too high or too low, but the component does not
+  // specify which.
+  ERROR_CODE_TEMPERATURE_OUT_OF_RANGE = 3;
+
+  // The pressure is too high.
+  ERROR_CODE_PRESSURE_HIGH = 4;
+
+  // The pressure is too low.
+  ERROR_CODE_PRESSURE_LOW = 5;
+
+  // The pressure is out of the acceptable range.
+  // This could be either too high or too low, but the component does not
+  // specify which.
+  ERROR_CODE_PRESSURE_OUT_OF_RANGE = 6;
+
+  // The drain pump is faulty.
+  ERROR_CODE_FAULTY_DRAIN_PUMP = 7;
+
+  // The compressor is overloaded.
+  ERROR_CODE_COMPRESSOR_OVERLOADED = 8;
+
+  // The anti-phase detection has been triggered.
+  ERROR_CODE_ANTI_PHASE_DETECTION_TRIGGERED = 9;
+
+  // The voltage sensor has detected an anomaly.
+  ERROR_CODE_VOLTAGE_ANOMALY = 10;
+
+  // The current sensor has detected an anomaly.
+  ERROR_CODE_CURRENT_ANOMALY = 11;
+
+  // The drain sensor has detected an anomaly.
+  ERROR_CODE_DRAIN_SENSOR_ANOMALY = 12;
+
+  // The liquid probe has detected an anomaly.
+  ERROR_CODE_LIQUID_PROBE_ANOMALY = 13;
+
+  // The condensation probe has detected an anomaly.
+  ERROR_CODE_CONDENSATION_PROBE_ANOMALY = 14;
+
+  // There is an error in the indoor/outdoor cabling.
+  ERROR_CODE_INDORR_OUTDOOR_CABLING_ERROR = 15;
+
+  // There is a communication error.
+  ERROR_CODE_COMMUNICATION_ERROR = 16;
+
+  // An error code that is not covered by the other error codes.
+  ERROR_CODE_OTHER = 17;
+}
+
+// Enumerated fan speeds for air conditioning units.
+enum FanSpeed {
+  // Default value when fan speed is not specified.
+  FAN_SPEED_UNSPECIFIED = 0;
+
+  // The fan is not running.
+  FAN_SPEED_OFF = 1;
+
+  // The fan speed is automatically adjusted by the air conditioner.
+  FAN_SPEED_AUTO = 2;
+
+  // The lowest fan speed setting.
+  FAN_SPEED_LOW = 3;
+
+  // A fan speed setting between low and medium.
+  FAN_SPEED_LOW_MEDIUM = 4;
+
+  // A medium fan speed setting.
+  FAN_SPEED_MEDIUM = 5;
+
+  // A fan speed setting between medium and high.
+  FAN_SPEED_MEDIUM_HIGH = 6;
+
+  // The highest fan speed setting.
+  FAN_SPEED_HIGH = 7;
+
+  // The fan speed is set to vary or oscillate between different speeds.
+  FAN_SPEED_VARIABLE = 8;
+}
+
+// Enumerated positions for the horizontal direction of an air conditioner's
+// vanes.
+//
+// Ideally, this should be a continuous range of values, but the Air
+// Conditioners we have encountered so far do not specify clear angles for
+// this.
+enum HorizontalVanePosition {
+  // Default value, used when the horizontal position is not specified.
+  HORIZONTAL_VANE_POSITION_UNSPECIFIED = 0;
+
+  // Automatically adjusts the horizontal vane position based on system logic.
+  HORIZONTAL_VANE_POSITION_AUTO = 1;
+
+  // The vanes are directed to the left.
+  HORIZONTAL_VANE_POSITION_LEFT = 2;
+
+  // The vanes are centered, directing airflow straight ahead.
+  HORIZONTAL_VANE_POSITION_CENTER = 3;
+
+  // The vanes are directed to the right.
+  HORIZONTAL_VANE_POSITION_RIGHT = 4;
+
+  // The vanes oscillate horizontally to distribute air evenly.
+  HORIZONTAL_VANE_POSITION_SWING = 5;
+}
+
+// Enumerated positions for the vertical direction of an air conditioner's
+// vanes.
+//
+// Ideally, this should be a continuous range of values, but the Air
+// Conditioners we have encountered so far do not specify clear angles for
+// this.
+enum VerticalVanePosition {
+  // Default value, used when the vertical position is not specified.
+  VERTICAL_VANE_POSITION_UNSPECIFIED = 0;
+
+  // Automatically adjusts the vertical vane position based on system logic.
+  VERTICAL_VANE_POSITION_AUTO = 1;
+
+  // The vanes are directed upwards.
+  VERTICAL_VANE_POSITION_UP = 2;
+
+  // The vanes are set to a middle position, balancing airflow between up and
+  // down.
+  VERTICAL_VANE_POSITION_MIDDLE = 3;
+
+  // The vanes are directed downwards.
+  VERTICAL_VANE_POSITION_DOWN = 4;
+
+  // The vanes oscillate vertically to distribute air evenly.
+  VERTICAL_VANE_POSITION_SWING = 5;
+}
+
+// Composite structure to hold both horizontal and vertical vane positions.
+message VanePosition {
+  // Horizontal position of the vane.
+  HorizontalVanePosition horizontal = 1;
+
+  // Vertical position of the vane.
+  VerticalVanePosition vertical = 2;
+}
+
+// State message.
+message State {
+  // The state of the overall component.
+  ComponentState component_state = 1;
+}
+
+// Error message.
+message Error {
+  // The error code.
+  ErrorCode code = 1;
+
+  // The error severity level.
+  common.ErrorLevel level = 2;
+
+  // The error message.
+  string msg = 3;
+}
+
+// The data message for an air conditioner component.
+message Data {
+  // The current fan speed setting.
+  FanSpeed fan_speed = 1;
+
+  // The current vane position.
+  VanePosition vane_position = 2;
+
+  // The current temperature setpoint.
+  frequenz.api.common.metrics.Metric temperature_setpoint = 3;
+
+  // The current reference temperature.
+  // This refers to a temperature used as a baseline or comparison for the
+  // system. E.g., the outdoor temperature or a reference temperature set by
+  // the user or system.
+  frequenz.api.common.metrics.Metric temperature_reference = 4;
+
+  // The current indoor temperature.
+  frequenz.api.common.metrics.Metric temperature_indoor = 5;
+}
+
+// Air conditioner properties.
+message Properties {
+  // The firmware version of the component.
+  string firmware_ver = 1;
+}
+
+// Air conditioner component message.
+message AirConditioner {
+  // The component properties
+  Properties properties = 1;
+
+  // The inverter's state.
+  State state = 2;
+
+  // A list of errors encountered the component. An empty list implies no error.
+  repeated Error errors = 3;
+
+  // An Air Conditioner data object.
+  Data data = 4;
+}
