@@ -6,6 +6,13 @@ requires = [
   "setuptools == 67.7.2",
   "setuptools_scm[toml] == 7.1.0",
   "frequenz-repo-config[api] == 0.4.0",
+  # We need to pin the protobuf, grpcio and  grpcio-tools dependencies to make
+  # sure the code is generated using the minimum supported versions, as older
+  # versions can't work with code that was generated with newer versions.
+  # https://protobuf.dev/support/cross-version-runtime-guarantee/#backwards
+  "protobuf == 4.25.3",
+  "grpcio-tools == 1.51.1",
+  "grpcio == 1.51.1",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -26,9 +33,15 @@ classifiers = [
 ]
 requires-python = ">= 3.11, < 4"
 dependencies = [
-  "frequenz-api-common >= 0.5.4, < 0.6",
+  "frequenz-api-common >= 0.6.2, < 0.7",
   "googleapis-common-protos >= 1.56.4, < 2",
-  "grpcio >= 1.51.1, < 2",
+  # We can't widen beyond 6 because of protobuf cross-version runtime guarantees
+  # https://protobuf.dev/support/cross-version-runtime-guarantee/#major
+  "protobuf >= 4.25.3, < 6", # Do not widen beyond 6!
+  # We couldn't find any document with a spec about the cross-version runtime
+  # guarantee for grpcio, so unless we find one in the future, we'll assume
+  # major version jumps are not compatible
+  "grpcio >= 1.51.1, < 2", # Do not widen beyond 2!
 ]
 dynamic = ["version"]
 
@@ -46,14 +59,16 @@ dev-formatting = ["black == 23.3.0", "isort == 5.12.0"]
 dev-mkdocs = [
   "mike == 1.1.2",
   "mkdocs-gen-files == 0.5.0",
-  "mkdocs-literate-nav == 0.6.0",
-  "mkdocs-material == 9.1.16",
   "mkdocs-section-index == 0.3.5",
-  "mkdocstrings[python] == 0.22.0",
+  "mkdocs-literate-nav == 0.6.1",
+  "mkdocs-material == 9.5.20",
+  "mkdocstrings[python] == 0.26.1",
+  "mkdocstrings-python == 1.11.1",
   "frequenz-repo-config[api] == 0.4.0",
 ]
 dev-mypy = [
   "mypy == 1.2.0",
+  "grpc-stubs == 1.53.0.5",
   # For checking the noxfile, docs/ script, and tests
   "frequenz-api-microgrid[dev-mkdocs,dev-noxfile,dev-pytest]",
 ]
@@ -102,6 +117,18 @@ disable = [
 
 [tool.pytest.ini_options]
 testpaths = ["pytests"]
+
+[tool.mypy]
+explicit_package_bases = true
+namespace_packages = true
+# This option disables mypy cache, and it is sometimes useful to enable it if
+# you are getting weird intermittent error, or error in the CI but not locally
+# (or vice versa). In particular errors saying that type: ignore is not
+# used but getting the original ignored error when removing the type: ignore.
+# See for example: https://github.com/python/mypy/issues/2960
+#no_incremental = true
+packages = ["frequenz.api.microgrid"]
+strict = true
 
 [tool.setuptools.package-dir]
 "" = "py"
