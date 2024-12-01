@@ -5,14 +5,14 @@
 requires = [
   "setuptools == 68.1.0",
   "setuptools_scm[toml] == 7.1.0",
-  "frequenz-repo-config[api] == 0.10.0",
+  "frequenz-repo-config[api] == 0.11.0",
   # We need to pin the protobuf, grpcio and  grpcio-tools dependencies to make
   # sure the code is generated using the minimum supported versions, as older
   # versions can't work with code that was generated with newer versions.
   # https://protobuf.dev/support/cross-version-runtime-guarantee/#backwards
-  "protobuf == 5.28.1",
-  "grpcio-tools == 1.66.1",
-  "grpcio == 1.66.1",
+  "protobuf == 5.29.0",
+  "grpcio-tools == 1.68.0",
+  "grpcio == 1.68.0",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -62,10 +62,10 @@ dev-mkdocs = [
   "mike == 1.1.2",
   "mkdocs-gen-files == 0.5.0",
   "mkdocs-literate-nav == 0.6.1",
-  "mkdocs-material == 9.5.43",
+  "mkdocs-material == 9.5.46",
   "mkdocstrings[python] == 0.26.1",
   "mkdocstrings-python == 1.12.2",
-  "frequenz-repo-config[api] == 0.10.0",
+  "frequenz-repo-config[api] == 0.11.0",
 ]
 dev-mypy = [
   "mypy == 1.13.0",
@@ -73,7 +73,7 @@ dev-mypy = [
   # For checking the noxfile, docs/ script, and tests
   "frequenz-api-microgrid[dev-mkdocs,dev-noxfile,dev-pytest]",
 ]
-dev-noxfile = ["nox == 2024.10.9", "frequenz-repo-config[api] == 0.10.0"]
+dev-noxfile = ["nox == 2024.10.9", "frequenz-repo-config[api] == 0.11.0"]
 dev-pylint = [
   "pylint == 3.3.1",
   # For checking the noxfile, docs/ script, and tests
@@ -81,7 +81,7 @@ dev-pylint = [
 ]
 dev-pytest = [
   "pytest == 8.3.3",
-  "frequenz-repo-config[extra-lint-examples] == 0.10.0",
+  "frequenz-repo-config[extra-lint-examples] == 0.11.0",
 ]
 dev = [
   "frequenz-api-microgrid[dev-mkdocs,dev-flake8,dev-formatting,dev-mkdocs,dev-mypy,dev-noxfile,dev-pylint,dev-pytest]",
