@@ -57,3 +57,11 @@ updates:
     labels:
       - "part:tooling"
       - "type:tech-debt"
+    groups:
+      compatible:
+        update-types:
+          - "minor"
+          - "patch"
+      artifacts:
+        patterns:
+          - "actions/*-artifact"
