@@ -134,6 +134,10 @@ disable = [
   # pylint's unsubscriptable check is buggy and is not needed because
   # it is a type-check, for which we already have mypy.
   "unsubscriptable-object",
+  # Checked by mypy
+  "no-member",
+  "possibly-used-before-assignment",
+  "no-name-in-module",
   # Checked by flake8
   "redefined-outer-name",
   "unused-import",
