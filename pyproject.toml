@@ -37,11 +37,11 @@ dependencies = [
   "googleapis-common-protos >= 1.65.0, < 2",
   # We can't widen beyond 6 because of protobuf cross-version runtime guarantees
   # https://protobuf.dev/support/cross-version-runtime-guarantee/#major
-  "protobuf >= 5.28.1, < 7", # Do not widen beyond 7!
+  "protobuf >= 5.29.0, < 7", # Do not widen beyond 7!
   # We couldn't find any document with a spec about the cross-version runtime
   # guarantee for grpcio, so unless we find one in the future, we'll assume
   # major version jumps are not compatible
-  "grpcio >= 1.66.1, < 2", # Do not widen beyond 2!
+  "grpcio >= 1.68.1, < 2", # Do not widen beyond 2!
 ]
 dynamic = ["version"]
 
