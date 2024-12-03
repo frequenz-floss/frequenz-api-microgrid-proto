@@ -169,3 +169,9 @@ strict = true
 
 [tool.setuptools_scm]
 version_scheme = "post-release"
+
+[tool.frequenz-repo-config.protobuf]
+include_paths = [
+  "submodules/api-common-protos",
+  "submodules/frequenz-api-common/proto",
+]
